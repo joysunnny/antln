@@ -1,0 +1,47 @@
+package com.analyzer;
+
+import com.analyzer.code.CodeStructureAnalyzer;
+import com.analyzer.config.ValueResolver;
+import com.analyzer.model.MethodModel;
+import com.analyzer.model.TransformationInfo;
+import com.analyzer.hierarchy.MethodHierarchyAnalyzer;
+import com.analyzer.tracer.TransformationTracer;
+
+import java.io.File;
+import java.util.*;
+
+public class MainAnalyzer {
+
+    public static void main(String[] args) {
+        String sourceDir = "src/main/java"; // ✅ Path to your Java source files
+        String propFile = "src/main/resources/application.properties";
+        String ymlFile = "src/main/resources/application.yml";
+
+        // 1. 🔍 Step 1: Analyze method hierarchy
+        MethodHierarchyAnalyzer hierarchyAnalyzer = new MethodHierarchyAnalyzer();
+        Map<String, MethodModel> methodMap = hierarchyAnalyzer.analyzeProject(sourceDir);
+
+        // 2. 🧠 Step 2: Analyze code blocks and variables
+        CodeStructureAnalyzer codeAnalyzer = new CodeStructureAnalyzer(methodMap);
+        codeAnalyzer.analyze(sourceDir);
+
+        // 3. 🔧 Step 3: Resolve @Value properties
+        ValueResolver valueResolver = new ValueResolver(methodMap);
+        valueResolver.resolve(new File(propFile));
+        valueResolver.resolveYaml(new File(ymlFile));
+
+        // 4. 🔎 Step 4: Trace input param to DB
+        TransformationTracer tracer = new TransformationTracer(methodMap);
+        List<TransformationInfo> result = tracer.traceParameter(
+            "com.example.controller.UserController", // 🧭 starting class
+            "getUser",                                // 🔽 starting method
+            "userId"                                   // 🎯 parameter to trace
+        );
+
+        // 5. 🧾 Print results as JSON
+        result.forEach(info -> {
+            System.out.println("=============");
+            System.out.println(info.toJson());
+        });
+    }
+}
