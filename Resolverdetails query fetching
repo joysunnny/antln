@@ -1,0 +1,41 @@
+package com.example.analyzer.model;
+
+public class ResolvedValueDetail {
+    private String placeholder;
+    private String resolvedValue;
+    private String mappedColumn;
+    private String tableName;
+
+    public ResolvedValueDetail(String placeholder, String resolvedValue, String mappedColumn, String tableName) {
+        this.placeholder = placeholder;
+        this.resolvedValue = resolvedValue;
+        this.mappedColumn = mappedColumn;
+        this.tableName = tableName;
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public String getResolvedValue() {
+        return resolvedValue;
+    }
+
+    public String getMappedColumn() {
+        return mappedColumn;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    @Override
+    public String toString() {
+        return "ResolvedValueDetail{" +
+                "placeholder='" + placeholder + '\'' +
+                ", resolvedValue='" + resolvedValue + '\'' +
+                ", mappedColumn='" + mappedColumn + '\'' +
+                ", tableName='" + tableName + '\'' +
+                '}';
+    }
+}
