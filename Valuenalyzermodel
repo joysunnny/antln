@@ -1,0 +1,36 @@
+package com.analyzer.model;
+
+public class ValueResolvedModel {
+    private String propertyKey;
+    private String resolvedValue;
+    private String injectedFieldName;
+
+    public String getPropertyKey() {
+        return propertyKey;
+    }
+
+    public void setPropertyKey(String propertyKey) {
+        this.propertyKey = propertyKey;
+    }
+
+    public String getResolvedValue() {
+        return resolvedValue;
+    }
+
+    public void setResolvedValue(String resolvedValue) {
+        this.resolvedValue = resolvedValue;
+    }
+
+    public String getInjectedFieldName() {
+        return injectedFieldName;
+    }
+
+    public void setInjectedFieldName(String injectedFieldName) {
+        this.injectedFieldName = injectedFieldName;
+    }
+
+    @Override
+    public String toString() {
+        return "Injected Field: " + injectedFieldName + " -> ${" + propertyKey + "} = " + resolvedValue;
+    }
+}
