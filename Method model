@@ -1,0 +1,57 @@
+package com.analyzer.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MethodModel {
+    private String className;
+    private String methodName;
+    private String methodBody;
+    private List<String> parameters = new ArrayList<>();
+    private List<String> calledMethods = new ArrayList<>();
+    private List<CodeStructureDetail> codeBlocks = new ArrayList<>();
+    private List<ResolvedValueModel> resolvedValues = new ArrayList<>();
+
+    public MethodModel() {}
+
+    public MethodModel(String className, String methodName, String methodBody) {
+        this.className = className;
+        this.methodName = methodName;
+        this.methodBody = methodBody;
+    }
+
+    // Getters and Setters
+
+    public String getClassName() { return className; }
+    public void setClassName(String className) { this.className = className; }
+
+    public String getMethodName() { return methodName; }
+    public void setMethodName(String methodName) { this.methodName = methodName; }
+
+    public String getMethodBody() { return methodBody; }
+    public void setMethodBody(String methodBody) { this.methodBody = methodBody; }
+
+    public List<String> getParameters() { return parameters; }
+    public void setParameters(List<String> parameters) { this.parameters = parameters; }
+
+    public List<String> getCalledMethods() { return calledMethods; }
+    public void setCalledMethods(List<String> calledMethods) { this.calledMethods = calledMethods; }
+
+    public List<CodeStructureDetail> getCodeBlocks() { return codeBlocks; }
+    public void setCodeBlocks(List<CodeStructureDetail> codeBlocks) { this.codeBlocks = codeBlocks; }
+
+    public List<ResolvedValueModel> getResolvedValues() { return resolvedValues; }
+    public void setResolvedValues(List<ResolvedValueModel> resolvedValues) { this.resolvedValues = resolvedValues; }
+
+    @Override
+    public String toString() {
+        return "MethodModel{" +
+                "className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", parameters=" + parameters +
+                ", calledMethods=" + calledMethods +
+                ", codeBlocks=" + codeBlocks +
+                ", resolvedValues=" + resolvedValues +
+                '}';
+    }
+}
