@@ -1,0 +1,67 @@
+package com.analyzer.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TransformationInfo {
+    private String parameterName;                 // The original parameter
+    private List<String> transformationSteps;     // All transformation logic as steps
+    private String finalColumnName;               // e.g., "user_id"
+    private String finalTableName;                // e.g., "users"
+
+    public TransformationInfo() {
+        this.transformationSteps = new ArrayList<>();
+    }
+
+    public TransformationInfo(String parameterName) {
+        this.parameterName = parameterName;
+        this.transformationSteps = new ArrayList<>();
+    }
+
+    // Getters and setters
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName = parameterName;
+    }
+
+    public List<String> getTransformationSteps() {
+        return transformationSteps;
+    }
+
+    public void setTransformationSteps(List<String> transformationSteps) {
+        this.transformationSteps = transformationSteps;
+    }
+
+    public void addTransformationStep(String step) {
+        this.transformationSteps.add(step);
+    }
+
+    public String getFinalColumnName() {
+        return finalColumnName;
+    }
+
+    public void setFinalColumnName(String finalColumnName) {
+        this.finalColumnName = finalColumnName;
+    }
+
+    public String getFinalTableName() {
+        return finalTableName;
+    }
+
+    public void setFinalTableName(String finalTableName) {
+        this.finalTableName = finalTableName;
+    }
+
+    @Override
+    public String toString() {
+        return "TransformationInfo{" +
+                "parameterName='" + parameterName + '\'' +
+                ", transformationSteps=" + transformationSteps +
+                ", finalColumnName='" + finalColumnName + '\'' +
+                ", finalTableName='" + finalTableName + '\'' +
+                '}';
+    }
+}
