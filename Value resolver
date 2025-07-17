@@ -1,0 +1,67 @@
+package com.example.analyzer.resolver;
+
+import java.io.*;
+import java.util.*;
+import org.yaml.snakeyaml.Yaml;
+
+public class ValueResolver {
+    private final Map<String, String> resolvedValues = new HashMap<>();
+
+    public ValueResolver(String basePath) {
+        loadProperties(basePath);
+        loadYml(basePath);
+    }
+
+    private void loadProperties(String basePath) {
+        File propertiesFile = new File(basePath + "/application.properties");
+        if (propertiesFile.exists()) {
+            try (InputStream input = new FileInputStream(propertiesFile)) {
+                Properties props = new Properties();
+                props.load(input);
+                for (String name : props.stringPropertyNames()) {
+                    resolvedValues.put(name, props.getProperty(name));
+                }
+            } catch (IOException e) {
+                System.err.println("Error reading application.properties: " + e.getMessage());
+            }
+        }
+    }
+
+    private void loadYml(String basePath) {
+        File ymlFile = new File(basePath + "/application.yml");
+        if (ymlFile.exists()) {
+            try (InputStream input = new FileInputStream(ymlFile)) {
+                Yaml yaml = new Yaml();
+                Map<String, Object> data = yaml.load(input);
+                flattenYaml("", data);
+            } catch (IOException e) {
+                System.err.println("Error reading application.yml: " + e.getMessage());
+            }
+        }
+    }
+
+    private void flattenYaml(String prefix, Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = prefix.isEmpty() ? entry.getKey() : prefix + "." + entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                flattenYaml(key, (Map<String, Object>) value);
+            } else {
+                resolvedValues.put(key, value.toString());
+            }
+        }
+    }
+
+    public String resolve(String expression) {
+        // expression is like "${db.query.selectUser}"
+        if (expression.startsWith("${") && expression.endsWith("}")) {
+            String key = expression.substring(2, expression.length() - 1);
+            return resolvedValues.getOrDefault(key, "UNRESOLVED");
+        }
+        return expression;
+    }
+
+    public Map<String, String> getAllResolvedValues() {
+        return resolvedValues;
+    }
+}
