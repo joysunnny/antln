@@ -1,0 +1,12 @@
+package com.analyzer.model;
+
+public class TransformationStep {
+    private String description;
+
+    public TransformationStep(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+}
