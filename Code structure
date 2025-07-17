@@ -1,0 +1,123 @@
+package com.analyzer.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CodeStructureDetail {
+
+    private List<String> ifBlocks;            // Captures all if conditions
+    private List<String> elseIfBlocks;        // Captures all else-if conditions
+    private List<String> elseBlocks;          // Captures all else blocks
+    private List<String> tryBlocks;           // Captures try blocks
+    private List<String> catchBlocks;         // Captures catch blocks
+    private List<String> finallyBlocks;       // Captures finally blocks
+    private List<String> variableInitializations; // Tracks variable declarations/assignments
+
+    public CodeStructureDetail() {
+        this.ifBlocks = new ArrayList<>();
+        this.elseIfBlocks = new ArrayList<>();
+        this.elseBlocks = new ArrayList<>();
+        this.tryBlocks = new ArrayList<>();
+        this.catchBlocks = new ArrayList<>();
+        this.finallyBlocks = new ArrayList<>();
+        this.variableInitializations = new ArrayList<>();
+    }
+
+    // Getters and Setters
+    public List<String> getIfBlocks() {
+        return ifBlocks;
+    }
+
+    public void setIfBlocks(List<String> ifBlocks) {
+        this.ifBlocks = ifBlocks;
+    }
+
+    public void addIfBlock(String ifBlock) {
+        this.ifBlocks.add(ifBlock);
+    }
+
+    public List<String> getElseIfBlocks() {
+        return elseIfBlocks;
+    }
+
+    public void setElseIfBlocks(List<String> elseIfBlocks) {
+        this.elseIfBlocks = elseIfBlocks;
+    }
+
+    public void addElseIfBlock(String elseIfBlock) {
+        this.elseIfBlocks.add(elseIfBlock);
+    }
+
+    public List<String> getElseBlocks() {
+        return elseBlocks;
+    }
+
+    public void setElseBlocks(List<String> elseBlocks) {
+        this.elseBlocks = elseBlocks;
+    }
+
+    public void addElseBlock(String elseBlock) {
+        this.elseBlocks.add(elseBlock);
+    }
+
+    public List<String> getTryBlocks() {
+        return tryBlocks;
+    }
+
+    public void setTryBlocks(List<String> tryBlocks) {
+        this.tryBlocks = tryBlocks;
+    }
+
+    public void addTryBlock(String tryBlock) {
+        this.tryBlocks.add(tryBlock);
+    }
+
+    public List<String> getCatchBlocks() {
+        return catchBlocks;
+    }
+
+    public void setCatchBlocks(List<String> catchBlocks) {
+        this.catchBlocks = catchBlocks;
+    }
+
+    public void addCatchBlock(String catchBlock) {
+        this.catchBlocks.add(catchBlock);
+    }
+
+    public List<String> getFinallyBlocks() {
+        return finallyBlocks;
+    }
+
+    public void setFinallyBlocks(List<String> finallyBlocks) {
+        this.finallyBlocks = finallyBlocks;
+    }
+
+    public void addFinallyBlock(String finallyBlock) {
+        this.finallyBlocks.add(finallyBlock);
+    }
+
+    public List<String> getVariableInitializations() {
+        return variableInitializations;
+    }
+
+    public void setVariableInitializations(List<String> variableInitializations) {
+        this.variableInitializations = variableInitializations;
+    }
+
+    public void addVariableInitialization(String variableInit) {
+        this.variableInitializations.add(variableInit);
+    }
+
+    @Override
+    public String toString() {
+        return "CodeStructureDetail{" +
+                "ifBlocks=" + ifBlocks +
+                ", elseIfBlocks=" + elseIfBlocks +
+                ", elseBlocks=" + elseBlocks +
+                ", tryBlocks=" + tryBlocks +
+                ", catchBlocks=" + catchBlocks +
+                ", finallyBlocks=" + finallyBlocks +
+                ", variableInitializations=" + variableInitializations +
+                '}';
+    }
+}
