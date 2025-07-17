@@ -1,52 +1,67 @@
-package com.analyzer.hierarchy;
+package com.analyzer.analyzers;
 
-import com.analyzer.model.MethodModel;
+import com.analyzer.model.*;
 import spoon.Launcher;
 import spoon.reflect.CtModel;
-import spoon.reflect.code.CtInvocation;
-import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
+import spoon.reflect.visitor.filter.TypeFilter;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class MethodHierarchyAnalyzer {
-    private final Map<String, MethodModel> methodMap = new HashMap<>();
-
-    public Map<String, MethodModel> analyzeProject(String projectPath) {
+public class MethodAnalyzer {
+    public List<MethodModel> analyze(File projectDir) {
+        List<MethodModel> methodModels = new ArrayList<>();
         Launcher launcher = new Launcher();
-        launcher.addInputResource(projectPath);
-        launcher.getEnvironment().setNoClasspath(true);
-        CtModel model = launcher.buildModel();
+        launcher.addInputResource(projectDir.getAbsolutePath());
+        launcher.buildModel();
+        CtModel model = launcher.getModel();
 
-        for (CtType<?> ctType : model.getAllTypes()) {
-            if (!(ctType instanceof CtClass)) continue;
-
-            String className = ctType.getQualifiedName();
-
-            for (CtMethod<?> method : ctType.getMethods()) {
-                String methodSignature = className + "." + method.getSimpleName();
-
+        for (CtClass<?> ctClass : model.getElements(new TypeFilter<>(CtClass.class))) {
+            String className = ctClass.getQualifiedName();
+            for (CtMethod<?> method : ctClass.getMethods()) {
                 MethodModel methodModel = new MethodModel();
                 methodModel.setClassName(className);
                 methodModel.setMethodName(method.getSimpleName());
-                methodModel.setParameters(method.getParameters().toString());
-                methodModel.setBody(method.getBody() != null ? method.getBody().toString() : "");
 
-                for (CtStatement stmt : method.getBody().getStatements()) {
-                    if (stmt instanceof CtInvocation) {
-                        CtInvocation<?> invocation = (CtInvocation<?>) stmt;
-                        String invokedMethod = invocation.getExecutable().getDeclaringType().getQualifiedName()
-                                + "." + invocation.getExecutable().getSimpleName();
-                        methodModel.getChildMethods().add(invokedMethod);
-                    }
+                // Parameters
+                List<String> paramList = new ArrayList<>();
+                method.getParameters().forEach(p -> paramList.add(p.getSimpleName()));
+                methodModel.setParameters(paramList);
+
+                // Method body
+                if (method.getBody() != null)
+                    methodModel.setMethodBody(method.getBody().toString());
+
+                // Method calls
+                List<String> called = new ArrayList<>();
+                for (CtInvocation<?> invocation : method.getElements(new TypeFilter<>(CtInvocation.class))) {
+                    called.add(invocation.getExecutable().getSignature());
                 }
+                methodModel.setCalledMethods(called);
 
-                methodMap.put(methodSignature, methodModel);
+                // Variable transformation
+                List<TransformationStep> transformations = new ArrayList<>();
+                for (CtAssignment<?, ?> assignment : method.getElements(new TypeFilter<>(CtAssignment.class))) {
+                    String expression = assignment.toString();
+                    transformations.add(new TransformationStep(expression));
+                }
+                methodModel.setTransformationSteps(transformations);
+
+                // Code blocks like if/else/try/catch
+                List<CodeStructureDetail> structures = new ArrayList<>();
+                for (CtIf ctIf : method.getElements(new TypeFilter<>(CtIf.class))) {
+                    structures.add(new CodeStructureDetail("if", ctIf.getCondition().toString()));
+                }
+                for (CtTry ctTry : method.getElements(new TypeFilter<>(CtTry.class))) {
+                    structures.add(new CodeStructureDetail("try", ctTry.toString()));
+                }
+                methodModel.setCodeBlocks(structures);
+
+                methodModels.add(methodModel);
             }
         }
-
-        return methodMap;
+        return methodModels;
     }
 }
