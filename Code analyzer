@@ -1,0 +1,47 @@
+package com.analyzer.code;
+
+import com.analyzer.model.CodeStructureDetail;
+import com.analyzer.model.MethodModel;
+import spoon.Launcher;
+import spoon.reflect.CtModel;
+import spoon.reflect.code.*;
+import spoon.reflect.declaration.*;
+
+import java.util.Map;
+
+public class CodeStructureAnalyzer {
+    private final Map<String, MethodModel> methodMap;
+
+    public CodeStructureAnalyzer(Map<String, MethodModel> methodMap) {
+        this.methodMap = methodMap;
+    }
+
+    public void analyze(String projectPath) {
+        Launcher launcher = new Launcher();
+        launcher.addInputResource(projectPath);
+        launcher.getEnvironment().setNoClasspath(true);
+        CtModel model = launcher.buildModel();
+
+        for (CtType<?> type : model.getAllTypes()) {
+            for (CtMethod<?> method : type.getMethods()) {
+                String key = type.getQualifiedName() + "." + method.getSimpleName();
+                if (!methodMap.containsKey(key)) continue;
+
+                MethodModel modelEntry = methodMap.get(key);
+
+                for (CtStatement stmt : method.getBody().getStatements()) {
+                    if (stmt instanceof CtIf) {
+                        modelEntry.getCodeStructureDetails().add(
+                            new CodeStructureDetail("if", stmt.toString()));
+                    } else if (stmt instanceof CtTry) {
+                        modelEntry.getCodeStructureDetails().add(
+                            new CodeStructureDetail("try", stmt.toString()));
+                    } else if (stmt instanceof CtVariable) {
+                        modelEntry.getCodeStructureDetails().add(
+                            new CodeStructureDetail("variable", stmt.toString()));
+                    }
+                }
+            }
+        }
+    }
+}
