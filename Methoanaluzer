@@ -1,0 +1,52 @@
+package com.analyzer.hierarchy;
+
+import com.analyzer.model.MethodModel;
+import spoon.Launcher;
+import spoon.reflect.CtModel;
+import spoon.reflect.code.CtInvocation;
+import spoon.reflect.code.CtStatement;
+import spoon.reflect.declaration.*;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MethodHierarchyAnalyzer {
+    private final Map<String, MethodModel> methodMap = new HashMap<>();
+
+    public Map<String, MethodModel> analyzeProject(String projectPath) {
+        Launcher launcher = new Launcher();
+        launcher.addInputResource(projectPath);
+        launcher.getEnvironment().setNoClasspath(true);
+        CtModel model = launcher.buildModel();
+
+        for (CtType<?> ctType : model.getAllTypes()) {
+            if (!(ctType instanceof CtClass)) continue;
+
+            String className = ctType.getQualifiedName();
+
+            for (CtMethod<?> method : ctType.getMethods()) {
+                String methodSignature = className + "." + method.getSimpleName();
+
+                MethodModel methodModel = new MethodModel();
+                methodModel.setClassName(className);
+                methodModel.setMethodName(method.getSimpleName());
+                methodModel.setParameters(method.getParameters().toString());
+                methodModel.setBody(method.getBody() != null ? method.getBody().toString() : "");
+
+                for (CtStatement stmt : method.getBody().getStatements()) {
+                    if (stmt instanceof CtInvocation) {
+                        CtInvocation<?> invocation = (CtInvocation<?>) stmt;
+                        String invokedMethod = invocation.getExecutable().getDeclaringType().getQualifiedName()
+                                + "." + invocation.getExecutable().getSimpleName();
+                        methodModel.getChildMethods().add(invokedMethod);
+                    }
+                }
+
+                methodMap.put(methodSignature, methodModel);
+            }
+        }
+
+        return methodMap;
+    }
+}
