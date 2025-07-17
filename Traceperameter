@@ -1,0 +1,53 @@
+package com.example.analyzer.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TracedParameter {
+    private String parameterName;
+    private List<VariableTransformation> transformations = new ArrayList<>();
+    private List<ValueInjection> resolvedValues = new ArrayList<>();
+    private SqlQueryDetail finalSql;
+
+    public TracedParameter(String parameterName) {
+        this.parameterName = parameterName;
+    }
+
+    public void addTransformation(VariableTransformation vt) {
+        transformations.add(vt);
+    }
+
+    public void addResolvedValue(ValueInjection vi) {
+        resolvedValues.add(vi);
+    }
+
+    public void setFinalSql(SqlQueryDetail sql) {
+        this.finalSql = sql;
+    }
+
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public List<VariableTransformation> getTransformations() {
+        return transformations;
+    }
+
+    public List<ValueInjection> getResolvedValues() {
+        return resolvedValues;
+    }
+
+    public SqlQueryDetail getFinalSql() {
+        return finalSql;
+    }
+
+    @Override
+    public String toString() {
+        return "TracedParameter{" +
+                "parameterName='" + parameterName + '\'' +
+                ", transformations=" + transformations +
+                ", resolvedValues=" + resolvedValues +
+                ", finalSql=" + finalSql +
+                '}';
+    }
+}
