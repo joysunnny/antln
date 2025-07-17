@@ -1,0 +1,60 @@
+package com.analyzer.model;
+
+public class ResolvedValueModel {
+    private String variableName;      // Name of the Java field or placeholder
+    private String resolvedValue;     // Actual value from .properties or .yml
+    private String sourceFile;        // application.yml, application.properties
+    private String type;              // "property", "yaml", or "query"
+
+    public ResolvedValueModel() {}
+
+    public ResolvedValueModel(String variableName, String resolvedValue, String sourceFile, String type) {
+        this.variableName = variableName;
+        this.resolvedValue = resolvedValue;
+        this.sourceFile = sourceFile;
+        this.type = type;
+    }
+
+    // Getters and setters
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(String variableName) {
+        this.variableName = variableName;
+    }
+
+    public String getResolvedValue() {
+        return resolvedValue;
+    }
+
+    public void setResolvedValue(String resolvedValue) {
+        this.resolvedValue = resolvedValue;
+    }
+
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(String sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "ResolvedValueModel{" +
+                "variableName='" + variableName + '\'' +
+                ", resolvedValue='" + resolvedValue + '\'' +
+                ", sourceFile='" + sourceFile + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
+}
